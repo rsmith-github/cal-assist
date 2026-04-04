@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlalchemy
+python-telegram-bot
+openai
+python-dotenv
+pydantic
+pydantic-settings
+aiosqlite
