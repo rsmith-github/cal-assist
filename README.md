@@ -1,4 +1,4 @@
-# Cal-Assist
+# Cal Assist
 
 A Telegram-based calorie tracking chatbot that understands natural language input
 and keeps a running daily total of calories in, calories out, and net calories.
@@ -20,20 +20,41 @@ and keeps a running daily total of calories in, calories out, and net calories.
    pip install -r requirements.txt
    ```
 
-3. **Configure environment**
+3. **Create the Telegram bot (Cal Assist)**
+
+   In Telegram, open **[@BotFather](https://t.me/BotFather)** and run:
+
+   - `/newbot`
+   - **Name** (what users see): `Cal Assist` (or `Cal Assist — your name`)
+   - **Username** (must be unique, end in `bot`): e.g. `cal_assist_yourname_bot`
+
+   BotFather replies with an **API token**. Put it in `.env` as `TELEGRAM_BOT_TOKEN`.
+
+   Optional in BotFather: `/setdescription` and `/setabouttext` — the app also pushes
+   name, description, and the `/` command menu when it starts.
+
+4. **Configure environment**
 
    ```bash
    cp .env.example .env
-   # Fill in your TELEGRAM_BOT_TOKEN and (optionally) OPENAI_API_KEY
+   # Set TELEGRAM_BOT_TOKEN; optionally OPENAI_API_KEY and OFF_CONTACT_URL
    ```
 
-4. **Run the bot** (still inside the venv)
+5. **Run the bot** (still inside the venv)
 
    ```bash
    python -m app.main
    ```
 
    Deactivate the venv when done: `deactivate`
+
+6. **Optional — FastAPI health check only**
+
+   ```bash
+   uvicorn app.main:app --reload
+   ```
+
+   Then open `http://127.0.0.1:8000/health`. The Telegram bot is started with `python -m app.main`, not via uvicorn.
 
 ## Usage
 
@@ -45,14 +66,21 @@ Send messages to your Telegram bot like:
 - `Muay Thai 1.5 hr` — logs exercise
 - `ND` — closes the current day and starts a new one
 - `remove beers` — deletes the most recent beer entry
-- `week` — shows a 7-day summary with average net calories
+- `actually 2 beers not 3` — replaces the last matching entry with the corrected amount
+- `summary` or `/summary` — today’s totals only
+- `week` or `/week` — up to the last 7 **closed** days (after `ND`), with rough fat change estimate
 
 ## How Parsing Works
 
-If an `OPENAI_API_KEY` is set, the bot sends your message to an LLM for
-accurate structured parsing. Otherwise it falls back to a regex + known-food
-lookup table, which handles common patterns like `NUMBER kcal FOOD` and
-well-known items (beer, rice, chicken, etc.).
+1. If `OPENAI_API_KEY` is set, the bot tries an LLM first for messy phrases.
+2. Otherwise (or if the model returns nothing useful), it uses **regex +**
+   [`data/known_foods.json`](data/known_foods.json) for common patterns and items.
+3. If that still does not match, it can call the **Open Food Facts** search API
+   (free, no key) for branded / packaged foods. Set `OPEN_FOOD_FACTS_ENABLED=false`
+   in `.env` to stay fully offline. Use `OFF_CONTACT_URL` for a proper
+   User-Agent contact (see Open Food Facts API etiquette).
+
+Exercise lines are **not** sent to Open Food Facts (they stay on local estimates).
 
 ## Stack
 

@@ -1,0 +1,169 @@
+{
+  "items": {
+    "beer": {
+      "type": "drink",
+      "calories_each": 150,
+      "aliases": ["beers"]
+    },
+    "wine": {
+      "type": "drink",
+      "calories_each": 125,
+      "aliases": ["glass of wine", "red wine", "white wine"]
+    },
+    "shot": {
+      "type": "drink",
+      "calories_each": 100,
+      "aliases": ["whiskey", "vodka", "tequila"]
+    },
+    "rice": {
+      "type": "food",
+      "calories_each": 200,
+      "aliases": ["cup of rice", "white rice"]
+    },
+    "chicken": {
+      "type": "food",
+      "calories_each": 250,
+      "aliases": ["chicken breast", "grilled chicken"]
+    },
+    "chicken wrap": {
+      "type": "food",
+      "calories_each": 350,
+      "aliases": ["wrap"]
+    },
+    "egg": {
+      "type": "food",
+      "calories_each": 70,
+      "aliases": ["eggs"]
+    },
+    "banana": {
+      "type": "food",
+      "calories_each": 105,
+      "aliases": ["bananas"]
+    },
+    "apple": {
+      "type": "food",
+      "calories_each": 95,
+      "aliases": ["apples"]
+    },
+    "orange": {
+      "type": "food",
+      "calories_each": 60,
+      "aliases": ["oranges"]
+    },
+    "orange juice": {
+      "type": "drink",
+      "calories_each": 110,
+      "aliases": ["oj", "fresh oj", "fresh orange juice", "orangejuice"]
+    },
+    "apple juice": {
+      "type": "drink",
+      "calories_each": 115,
+      "aliases": ["applejuice", "fresh apple juice"]
+    },
+    "fruit juice": {
+      "type": "drink",
+      "calories_each": 110,
+      "aliases": ["juice"]
+    },
+    "bread": {
+      "type": "food",
+      "calories_each": 80,
+      "aliases": ["slice of bread", "toast"]
+    },
+    "pizza": {
+      "type": "food",
+      "calories_each": 285,
+      "aliases": ["slice of pizza", "slice pizza"]
+    },
+    "salad": {
+      "type": "food",
+      "calories_each": 150,
+      "aliases": []
+    },
+    "coffee": {
+      "type": "drink",
+      "calories_each": 5,
+      "aliases": ["black coffee", "espresso", "americano"]
+    },
+    "latte": {
+      "type": "drink",
+      "calories_each": 190,
+      "aliases": ["cappuccino", "milk coffee", "flat white", "white coffee", "cafe latte"]
+    },
+    "chocolate milk": {
+      "type": "drink",
+      "calories_each": 190,
+      "aliases": ["milk chocolate drink", "choco milk", "hot chocolate"]
+    },
+    "soda": {
+      "type": "drink",
+      "calories_each": 140,
+      "aliases": ["coke", "pop", "soft drink", "pepsi", "sprite", "cola"]
+    },
+    "burger": {
+      "type": "food",
+      "calories_each": 550,
+      "aliases": ["cheeseburger", "hamburger", "beef burger"]
+    },
+    "fries": {
+      "type": "food",
+      "calories_each": 380,
+      "aliases": ["chips", "french fries", "fry"]
+    },
+    "pasta": {
+      "type": "food",
+      "calories_each": 350,
+      "aliases": ["spaghetti", "penne", "noodles"]
+    },
+    "steak": {
+      "type": "food",
+      "calories_each": 450,
+      "aliases": ["beef", "ribeye", "sirloin"]
+    },
+    "sushi": {
+      "type": "food",
+      "calories_each": 300,
+      "aliases": ["sashimi", "maki", "nigiri"]
+    },
+    "protein shake": {
+      "type": "drink",
+      "calories_each": 200,
+      "aliases": ["protein", "shake", "whey"]
+    },
+    "energy drink": {
+      "type": "drink",
+      "calories_each": 110,
+      "aliases": ["redbull", "monster"]
+    },
+    "yogurt": {
+      "type": "food",
+      "calories_each": 100,
+      "aliases": ["greek yogurt", "yoghurt"]
+    },
+    "sandwich": {
+      "type": "food",
+      "calories_each": 400,
+      "aliases": ["sub", "baguette"]
+    },
+    "oats": {
+      "type": "food",
+      "calories_each": 300,
+      "aliases": ["oatmeal", "porridge"]
+    },
+    "nuts": {
+      "type": "food",
+      "calories_each": 200,
+      "aliases": ["almonds", "cashews", "peanuts", "walnuts"]
+    }
+  },
+  "exercise_rates": {
+    "run": { "kcal_per_km": 65, "aliases": ["ran", "running", "jog", "jogging"] },
+    "walk": { "kcal_per_km": 45, "aliases": ["walked", "walking"] },
+    "bike": { "kcal_per_km": 35, "aliases": ["cycled", "cycling", "bicycle"] },
+    "swim": { "kcal_per_km": 85, "aliases": ["swam", "swimming"] },
+    "muay thai": { "kcal_per_hour": 600, "aliases": ["muaythai", "thai boxing"] },
+    "gym": { "kcal_per_hour": 350, "aliases": ["weights", "lifting", "workout"] },
+    "yoga": { "kcal_per_hour": 200, "aliases": [] },
+    "hiit": { "kcal_per_hour": 500, "aliases": [] }
+  }
+}

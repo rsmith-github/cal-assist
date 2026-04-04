@@ -6,4 +6,4 @@ openai
 python-dotenv
 pydantic
 pydantic-settings
-aiosqlite
+httpx
