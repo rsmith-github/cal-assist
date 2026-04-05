@@ -1,168 +1,127 @@
 {
   "items": {
-    "beer": {
-      "type": "drink",
-      "calories_each": 150,
-      "aliases": ["beers"]
-    },
-    "wine": {
-      "type": "drink",
-      "calories_each": 125,
-      "aliases": ["glass of wine", "red wine", "white wine"]
-    },
-    "shot": {
-      "type": "drink",
-      "calories_each": 100,
-      "aliases": ["whiskey", "vodka", "tequila"]
-    },
-    "rice": {
-      "type": "food",
-      "calories_each": 200,
-      "aliases": ["cup of rice", "white rice"]
-    },
-    "chicken": {
-      "type": "food",
-      "calories_each": 250,
-      "aliases": ["chicken breast", "grilled chicken"]
-    },
-    "chicken wrap": {
-      "type": "food",
-      "calories_each": 350,
-      "aliases": ["wrap"]
-    },
-    "egg": {
-      "type": "food",
-      "calories_each": 70,
-      "aliases": ["eggs"]
-    },
-    "banana": {
-      "type": "food",
-      "calories_each": 105,
-      "aliases": ["bananas"]
-    },
-    "apple": {
-      "type": "food",
-      "calories_each": 95,
-      "aliases": ["apples"]
-    },
-    "orange": {
+    "beer": { "type": "drink", "calories_each": 150, "aliases": ["beers", "lager", "ale"] },
+    "wine": { "type": "drink", "calories_each": 125, "aliases": ["glass of wine", "red wine", "white wine"] },
+    "shot": { "type": "drink", "calories_each": 100, "aliases": ["whiskey", "vodka", "tequila"] },
+
+    "rice": { "type": "food", "calories_each": 200, "aliases": ["cup of rice", "white rice", "jasmine rice"] },
+    "fried rice": { "type": "food", "calories_each": 450, "aliases": ["khao pad"] },
+
+    "chicken": { "type": "food", "calories_each": 250, "aliases": ["chicken breast", "grilled chicken"] },
+    "grilled chicken": { "type": "food", "calories_each": 280, "aliases": ["gai yang"] },
+    "chicken rice": { "type": "food", "calories_each": 500, "aliases": ["khao man gai"] },
+
+    "egg": { "type": "food", "calories_each": 70, "aliases": ["eggs", "fried egg"] },
+    "omelette": { "type": "food", "calories_each": 250, "aliases": ["omelet"] },
+
+    "banana": { "type": "food", "calories_each": 105, "aliases": ["bananas"] },
+    "apple": { "type": "food", "calories_each": 95, "aliases": ["apples"] },
+    "orange": { "type": "food", "calories_each": 60, "aliases": ["oranges"] },
+    "mango": { "type": "food", "calories_each": 135, "aliases": ["mangoes"] },
+    "pineapple": { "type": "food", "calories_each": 80, "aliases": [] },
+    "watermelon": { "type": "food", "calories_each": 85, "aliases": [] },
+    "papaya": { "type": "food", "calories_each": 60, "aliases": [] },
+    "dragon fruit": { "type": "food", "calories_each": 60, "aliases": ["pitaya"] },
+    "durian": { "type": "food", "calories_each": 300, "aliases": [] },
+    "longan": { "type": "food", "calories_each": 70, "aliases": [] },
+    "lychee": { "type": "food", "calories_each": 65, "aliases": [] },
+    "mangosteen": { "type": "food", "calories_each": 70, "aliases": [] },
+    "guava": {
       "type": "food",
       "calories_each": 60,
-      "aliases": ["oranges"]
+      "aliases": ["guavas", "farang", "thai guava"]
     },
-    "orange juice": {
-      "type": "drink",
-      "calories_each": 110,
-      "aliases": ["oj", "fresh oj", "fresh orange juice", "orangejuice"]
-    },
-    "apple juice": {
-      "type": "drink",
-      "calories_each": 115,
-      "aliases": ["applejuice", "fresh apple juice"]
-    },
-    "fruit juice": {
-      "type": "drink",
-      "calories_each": 110,
-      "aliases": ["juice"]
-    },
-    "bread": {
+    "green mango": {
       "type": "food",
-      "calories_each": 80,
-      "aliases": ["slice of bread", "toast"]
+      "calories_each": 120,
+      "aliases": ["unripe mango", "sour mango", "mamuang", "raw mango"]
     },
-    "pizza": {
-      "type": "food",
-      "calories_each": 285,
-      "aliases": ["slice of pizza", "slice pizza"]
-    },
-    "salad": {
+    "green mango with chili sugar": {
       "type": "food",
       "calories_each": 150,
-      "aliases": []
+      "aliases": [
+        "mango with chili salt",
+        "mango with prik klua",
+        "mango chili dip",
+        "sour mango with chili sugar"
+      ]
     },
-    "coffee": {
-      "type": "drink",
-      "calories_each": 5,
-      "aliases": ["black coffee", "espresso", "americano"]
-    },
-    "latte": {
-      "type": "drink",
-      "calories_each": 190,
-      "aliases": ["cappuccino", "milk coffee", "flat white", "white coffee", "cafe latte"]
-    },
-    "chocolate milk": {
-      "type": "drink",
-      "calories_each": 190,
-      "aliases": ["milk chocolate drink", "choco milk", "hot chocolate"]
-    },
-    "soda": {
-      "type": "drink",
-      "calories_each": 140,
-      "aliases": ["coke", "pop", "soft drink", "pepsi", "sprite", "cola"]
-    },
-    "burger": {
-      "type": "food",
-      "calories_each": 550,
-      "aliases": ["cheeseburger", "hamburger", "beef burger"]
-    },
-    "fries": {
-      "type": "food",
-      "calories_each": 380,
-      "aliases": ["chips", "french fries", "fry"]
-    },
-    "pasta": {
-      "type": "food",
-      "calories_each": 350,
-      "aliases": ["spaghetti", "penne", "noodles"]
-    },
-    "steak": {
-      "type": "food",
-      "calories_each": 450,
-      "aliases": ["beef", "ribeye", "sirloin"]
-    },
-    "sushi": {
-      "type": "food",
-      "calories_each": 300,
-      "aliases": ["sashimi", "maki", "nigiri"]
-    },
-    "protein shake": {
-      "type": "drink",
-      "calories_each": 200,
-      "aliases": ["protein", "shake", "whey"]
-    },
-    "energy drink": {
-      "type": "drink",
-      "calories_each": 110,
-      "aliases": ["redbull", "monster"]
-    },
-    "yogurt": {
-      "type": "food",
-      "calories_each": 100,
-      "aliases": ["greek yogurt", "yoghurt"]
-    },
-    "sandwich": {
-      "type": "food",
-      "calories_each": 400,
-      "aliases": ["sub", "baguette"]
-    },
-    "oats": {
-      "type": "food",
-      "calories_each": 300,
-      "aliases": ["oatmeal", "porridge"]
-    },
-    "nuts": {
+    "green mango with sweet sauce": {
       "type": "food",
       "calories_each": 200,
-      "aliases": ["almonds", "cashews", "peanuts", "walnuts"]
-    }
+      "aliases": ["mango with sweet fish sauce", "nam pla wan mango"]
+    },
+    "orange juice": { "type": "drink", "calories_each": 110, "aliases": ["oj"] },
+    "apple juice": { "type": "drink", "calories_each": 115, "aliases": [] },
+    "coconut water": { "type": "drink", "calories_each": 45, "aliases": [] },
+    "thai iced tea": { "type": "drink", "calories_each": 250, "aliases": ["thai tea"] },
+    "fruit smoothie": { "type": "drink", "calories_each": 180, "aliases": ["smoothie"] },
+
+    "bread": { "type": "food", "calories_each": 80, "aliases": ["toast"] },
+    "croissant": { "type": "food", "calories_each": 230, "aliases": [] },
+
+    "pizza": { "type": "food", "calories_each": 285, "aliases": ["slice of pizza"] },
+    "burger": { "type": "food", "calories_each": 550, "aliases": ["cheeseburger"] },
+    "fries": { "type": "food", "calories_each": 380, "aliases": ["chips"] },
+
+    "pasta": { "type": "food", "calories_each": 350, "aliases": ["spaghetti"] },
+    "noodles": { "type": "food", "calories_each": 300, "aliases": [] },
+
+    "pad thai": { "type": "food", "calories_each": 500, "aliases": ["thai noodles"] },
+    "pad see ew": { "type": "food", "calories_each": 500, "aliases": [] },
+    "pad kee mao": { "type": "food", "calories_each": 550, "aliases": ["drunken noodles"] },
+
+    "pad kra pao": { "type": "food", "calories_each": 550, "aliases": ["holy basil chicken", "kra pao", "pgp", "padkraprao", "kraprao", "กระเพรา", "ผัดกระเพรา"] },
+    "tom yum soup": { "type": "food", "calories_each": 100, "aliases": ["tom yum"] },
+    "tom kha soup": { "type": "food", "calories_each": 180, "aliases": [] },
+
+    "green curry": { "type": "food", "calories_each": 600, "aliases": [] },
+    "red curry": { "type": "food", "calories_each": 550, "aliases": [] },
+    "massaman curry": { "type": "food", "calories_each": 700, "aliases": [] },
+
+    "som tam": { "type": "food", "calories_each": 200, "aliases": ["papaya salad"] },
+    "larb": { "type": "food", "calories_each": 250, "aliases": ["laab"] },
+
+    "spring rolls": { "type": "food", "calories_each": 150, "aliases": ["fresh rolls"] },
+    "fried spring rolls": { "type": "food", "calories_each": 200, "aliases": [] },
+
+    "satay": { "type": "food", "calories_each": 300, "aliases": ["chicken satay"] },
+    "moo ping": { "type": "food", "calories_each": 120, "aliases": ["grilled pork skewers"] },
+
+    "boat noodles": { "type": "food", "calories_each": 300, "aliases": [] },
+    "khao soi": { "type": "food", "calories_each": 550, "aliases": [] },
+
+    "mango sticky rice": { "type": "food", "calories_each": 400, "aliases": [] },
+    "sticky rice": { "type": "food", "calories_each": 170, "aliases": ["glutinous rice"] },
+
+    "salad": { "type": "food", "calories_each": 150, "aliases": [] },
+
+    "coffee": { "type": "drink", "calories_each": 5, "aliases": ["black coffee"] },
+    "latte": { "type": "drink", "calories_each": 190, "aliases": ["cappuccino", "flat white"] },
+    "iced coffee": { "type": "drink", "calories_each": 120, "aliases": [] },
+
+    "soda": { "type": "drink", "calories_each": 140, "aliases": ["coke", "cola"] },
+
+    "protein shake": { "type": "drink", "calories_each": 200, "aliases": [] },
+    "energy drink": { "type": "drink", "calories_each": 110, "aliases": ["redbull"] },
+
+    "yogurt": { "type": "food", "calories_each": 100, "aliases": ["greek yogurt"] },
+    "sandwich": { "type": "food", "calories_each": 400, "aliases": ["sub"] },
+
+    "oats": { "type": "food", "calories_each": 300, "aliases": ["oatmeal"] },
+    "nuts": { "type": "food", "calories_each": 200, "aliases": ["almonds", "cashews"] },
+
+    "ice cream": { "type": "food", "calories_each": 250, "aliases": [] },
+    "cake": { "type": "food", "calories_each": 350, "aliases": [] }
   },
+
   "exercise_rates": {
-    "run": { "kcal_per_km": 65, "aliases": ["ran", "running", "jog", "jogging"] },
-    "walk": { "kcal_per_km": 45, "aliases": ["walked", "walking"] },
-    "bike": { "kcal_per_km": 35, "aliases": ["cycled", "cycling", "bicycle"] },
-    "swim": { "kcal_per_km": 85, "aliases": ["swam", "swimming"] },
-    "muay thai": { "kcal_per_hour": 600, "aliases": ["muaythai", "thai boxing"] },
-    "gym": { "kcal_per_hour": 350, "aliases": ["weights", "lifting", "workout"] },
+    "run": { "kcal_per_km": 65, "aliases": ["ran", "running", "jog"] },
+    "walk": { "kcal_per_km": 45, "aliases": ["walking"] },
+    "bike": { "kcal_per_km": 35, "aliases": ["cycling"] },
+    "swim": { "kcal_per_km": 85, "aliases": ["swimming"] },
+    "muay thai": { "kcal_per_hour": 600, "aliases": ["thai boxing"] },
+    "gym": { "kcal_per_hour": 350, "aliases": ["weights"] },
     "yoga": { "kcal_per_hour": 200, "aliases": [] },
     "hiit": { "kcal_per_hour": 500, "aliases": [] }
   }
