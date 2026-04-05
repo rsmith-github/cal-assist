@@ -33,10 +33,20 @@ def skip_off_lookup(text: str) -> bool:
     return bool(_EXERCISE_HINT.search(text.strip()))
 
 
+_MEASURE_PREFIX_RE = re.compile(
+    r"(?i)^(\d+(?:\.\d+)?)\s*(ml|cl|dl|l|g|kg|oz|lb|lbs|cup|cups)\s+(.+)$"
+)
+
+
 def _clean_query(text: str) -> tuple[int, str]:
     """Strip logging filler and optional leading quantity: (count, search phrase)."""
     t = text.strip()
     t = re.sub(r"(?i)^(had|ate|drank)\s+", "", t)
+    # Strip measure prefix ("200ml orange juice" → "orange juice") so the
+    # search term is just the food name.
+    mm = _MEASURE_PREFIX_RE.match(t)
+    if mm:
+        return 1, mm.group(3).strip()
     m = re.match(r"(?i)^(\d+)\s*[x×]\s+(.+)$", t)
     if m:
         return max(1, int(m.group(1))), m.group(2).strip()

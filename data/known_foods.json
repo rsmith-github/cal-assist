@@ -1,14 +1,14 @@
 {
   "items": {
-    "beer": { "type": "drink", "calories_each": 150, "aliases": ["beers", "lager", "ale"] },
-    "wine": { "type": "drink", "calories_each": 125, "aliases": ["glass of wine", "red wine", "white wine"] },
+    "beer": { "type": "drink", "calories_each": 150, "kcal_per_100": 43, "unit": "ml", "aliases": ["beers", "lager", "ale"] },
+    "wine": { "type": "drink", "calories_each": 125, "kcal_per_100": 83, "unit": "ml", "aliases": ["glass of wine", "red wine", "white wine"] },
     "shot": { "type": "drink", "calories_each": 100, "aliases": ["whiskey", "vodka", "tequila"] },
 
-    "rice": { "type": "food", "calories_each": 200, "aliases": ["cup of rice", "white rice", "jasmine rice"] },
+    "rice": { "type": "food", "calories_each": 200, "kcal_per_100": 130, "unit": "g", "aliases": ["cup of rice", "white rice", "jasmine rice"] },
     "fried rice": { "type": "food", "calories_each": 450, "aliases": ["khao pad"] },
 
-    "chicken": { "type": "food", "calories_each": 250, "aliases": ["chicken breast", "grilled chicken"] },
-    "grilled chicken": { "type": "food", "calories_each": 280, "aliases": ["gai yang"] },
+    "chicken": { "type": "food", "calories_each": 250, "kcal_per_100": 165, "unit": "g", "aliases": ["chicken breast", "grilled chicken"] },
+    "grilled chicken": { "type": "food", "calories_each": 280, "kcal_per_100": 165, "unit": "g", "aliases": ["gai yang"] },
     "chicken rice": { "type": "food", "calories_each": 500, "aliases": ["khao man gai"] },
 
     "egg": { "type": "food", "calories_each": 70, "aliases": ["eggs", "fried egg"] },
@@ -51,21 +51,21 @@
       "calories_each": 200,
       "aliases": ["mango with sweet fish sauce", "nam pla wan mango"]
     },
-    "orange juice": { "type": "drink", "calories_each": 110, "aliases": ["oj"] },
-    "apple juice": { "type": "drink", "calories_each": 115, "aliases": [] },
-    "coconut water": { "type": "drink", "calories_each": 45, "aliases": [] },
-    "thai iced tea": { "type": "drink", "calories_each": 250, "aliases": ["thai tea"] },
-    "fruit smoothie": { "type": "drink", "calories_each": 180, "aliases": ["smoothie"] },
+    "orange juice": { "type": "drink", "calories_each": 110, "kcal_per_100": 45, "unit": "ml", "aliases": ["oj"] },
+    "apple juice": { "type": "drink", "calories_each": 115, "kcal_per_100": 46, "unit": "ml", "aliases": [] },
+    "coconut water": { "type": "drink", "calories_each": 45, "kcal_per_100": 19, "unit": "ml", "aliases": [] },
+    "thai iced tea": { "type": "drink", "calories_each": 250, "kcal_per_100": 100, "unit": "ml", "aliases": ["thai tea"] },
+    "fruit smoothie": { "type": "drink", "calories_each": 180, "kcal_per_100": 55, "unit": "ml", "aliases": ["smoothie"] },
 
-    "bread": { "type": "food", "calories_each": 80, "aliases": ["toast"] },
+    "bread": { "type": "food", "calories_each": 80, "kcal_per_100": 265, "unit": "g", "aliases": ["toast"] },
     "croissant": { "type": "food", "calories_each": 230, "aliases": [] },
 
     "pizza": { "type": "food", "calories_each": 285, "aliases": ["slice of pizza"] },
     "burger": { "type": "food", "calories_each": 550, "aliases": ["cheeseburger"] },
     "fries": { "type": "food", "calories_each": 380, "aliases": ["chips"] },
 
-    "pasta": { "type": "food", "calories_each": 350, "aliases": ["spaghetti"] },
-    "noodles": { "type": "food", "calories_each": 300, "aliases": [] },
+    "pasta": { "type": "food", "calories_each": 350, "kcal_per_100": 131, "unit": "g", "aliases": ["spaghetti"] },
+    "noodles": { "type": "food", "calories_each": 300, "kcal_per_100": 138, "unit": "g", "aliases": [] },
 
     "pad thai": { "type": "food", "calories_each": 500, "aliases": ["thai noodles"] },
     "pad see ew": { "type": "food", "calories_each": 500, "aliases": [] },
@@ -96,22 +96,22 @@
 
     "salad": { "type": "food", "calories_each": 150, "aliases": [] },
 
-    "coffee": { "type": "drink", "calories_each": 5, "aliases": ["black coffee"] },
-    "latte": { "type": "drink", "calories_each": 190, "aliases": ["cappuccino", "flat white"] },
-    "iced coffee": { "type": "drink", "calories_each": 120, "aliases": [] },
+    "coffee": { "type": "drink", "calories_each": 5, "kcal_per_100": 2, "unit": "ml", "aliases": ["black coffee"] },
+    "latte": { "type": "drink", "calories_each": 190, "kcal_per_100": 50, "unit": "ml", "aliases": ["cappuccino", "flat white"] },
+    "iced coffee": { "type": "drink", "calories_each": 120, "kcal_per_100": 30, "unit": "ml", "aliases": [] },
 
-    "soda": { "type": "drink", "calories_each": 140, "aliases": ["coke", "cola"] },
+    "soda": { "type": "drink", "calories_each": 140, "kcal_per_100": 40, "unit": "ml", "aliases": ["coke", "cola"] },
 
-    "protein shake": { "type": "drink", "calories_each": 200, "aliases": [] },
-    "energy drink": { "type": "drink", "calories_each": 110, "aliases": ["redbull"] },
+    "protein shake": { "type": "drink", "calories_each": 200, "kcal_per_100": 65, "unit": "ml", "aliases": [] },
+    "energy drink": { "type": "drink", "calories_each": 110, "kcal_per_100": 45, "unit": "ml", "aliases": ["redbull"] },
 
-    "yogurt": { "type": "food", "calories_each": 100, "aliases": ["greek yogurt"] },
+    "yogurt": { "type": "food", "calories_each": 100, "kcal_per_100": 59, "unit": "g", "aliases": ["greek yogurt"] },
     "sandwich": { "type": "food", "calories_each": 400, "aliases": ["sub"] },
 
-    "oats": { "type": "food", "calories_each": 300, "aliases": ["oatmeal"] },
-    "nuts": { "type": "food", "calories_each": 200, "aliases": ["almonds", "cashews"] },
+    "oats": { "type": "food", "calories_each": 300, "kcal_per_100": 68, "unit": "g", "aliases": ["oatmeal"] },
+    "nuts": { "type": "food", "calories_each": 200, "kcal_per_100": 600, "unit": "g", "aliases": ["almonds", "cashews"] },
 
-    "ice cream": { "type": "food", "calories_each": 250, "aliases": [] },
+    "ice cream": { "type": "food", "calories_each": 250, "kcal_per_100": 207, "unit": "g", "aliases": [] },
     "cake": { "type": "food", "calories_each": 350, "aliases": [] }
   },
 

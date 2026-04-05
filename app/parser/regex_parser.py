@@ -16,6 +16,19 @@ _WORD_NUMS: dict[str, int | float] = {
 _MEASURE_UNIT_RE = re.compile(
     r"(?i)^(ml|cl|dl|l|g|kg|oz|lb|lbs|cup|cups|serving|servings|portion|slice|piece|pieces)\s+"
 )
+
+# Conversion factors to a base unit (ml or g).
+_UNIT_TO_ML: dict[str, float] = {"ml": 1, "cl": 10, "dl": 100, "l": 1000, "cup": 240, "cups": 240}
+_UNIT_TO_G: dict[str, float] = {"g": 1, "kg": 1000, "oz": 28.35, "lb": 453.6, "lbs": 453.6}
+
+# "200ml orange juice", "1.5l water", "500 g chicken"
+_MEASURED_RE = re.compile(
+    r"(?i)^(\d+(?:\.\d+)?)\s*(ml|cl|dl|l|g|kg|oz|lb|lbs|cup|cups)\s+(.+)$"
+)
+# "had 200ml orange juice", "drank 500 ml water"
+_MEASURED_VERB_RE = re.compile(
+    r"(?i)^(?:had|ate|drank)\s+(\d+(?:\.\d+)?)\s*(ml|cl|dl|l|g|kg|oz|lb|lbs|cup|cups)\s+(.+)$"
+)
 _WORD_NUM_RE = re.compile(
     r"(?i)^(a|an|one|two|three|four|five|six|seven|eight|nine|ten|half)\s+(.+)$"
 )
@@ -66,6 +79,43 @@ def _resolve_item_key(phrase: str) -> str | None:
         return None
     candidates.sort(key=lambda x: -x[0])
     return candidates[0][1]
+
+
+def _normalize_to_base(amount: float, unit: str) -> tuple[float, str] | None:
+    """Convert an amount + unit to base units (ml or g). Returns None for non-scalable units."""
+    u = unit.lower()
+    if u in _UNIT_TO_ML:
+        return amount * _UNIT_TO_ML[u], "ml"
+    if u in _UNIT_TO_G:
+        return amount * _UNIT_TO_G[u], "g"
+    return None
+
+
+def _parse_measured_item(amount: float, unit: str, item_phrase: str) -> list[ParsedEntry]:
+    """Scale calories using kcal_per_100 when the item supports it."""
+    key = _resolve_item_key(item_phrase)
+    if not key or key.startswith("ex:"):
+        return []
+    meta = _ITEMS[key]
+    kcal_per_100 = meta.get("kcal_per_100")
+    item_unit = meta.get("unit")
+    if kcal_per_100 is None or item_unit is None:
+        return []
+
+    normalized = _normalize_to_base(amount, unit)
+    if normalized is None:
+        return []
+    base_amount, base_unit = normalized
+
+    # Ensure compatible unit families (both volume or both weight).
+    item_base = "ml" if item_unit in _UNIT_TO_ML else "g"
+    if base_unit != item_base:
+        return []
+
+    total_kcal = max(1, int(round(base_amount / 100 * kcal_per_100)))
+    t = meta.get("type", "food")
+    label = f"{amount:g}{unit} {key}"
+    return [ParsedEntry(t, label, calories_in=total_kcal)]
 
 
 def _parse_exercise_line(s: str) -> list[ParsedEntry]:
@@ -169,6 +219,13 @@ def _parse_segment(seg: str) -> list[ParsedEntry]:
     if kc:
         return kc
 
+    # "had 200ml orange juice" / "drank 500 ml water"
+    m = _MEASURED_VERB_RE.match(s)
+    if m:
+        measured = _parse_measured_item(float(m.group(1)), m.group(2), m.group(3))
+        if measured:
+            return measured
+
     # "had 3 eggs" / "ate 2 burgers"
     m = re.match(r"(?i)(?:had|ate|drank)\s+(\d+)\s+(.+)$", s)
     if m:
@@ -183,6 +240,13 @@ def _parse_segment(seg: str) -> list[ParsedEntry]:
         q = _parse_quantity_item(qty, m.group(2))
         if q:
             return q
+
+    # "200ml orange juice" / "500g chicken"
+    m = _MEASURED_RE.match(s)
+    if m:
+        measured = _parse_measured_item(float(m.group(1)), m.group(2), m.group(3))
+        if measured:
+            return measured
 
     # "3 eggs" — but skip if the number is actually a measure ("500 ml orange juice")
     m = re.match(r"(?i)^(\d+)\s+(.+)$", s)
