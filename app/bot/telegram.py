@@ -8,7 +8,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 
 from app.bot import branding
 from app.config import settings
-from app.database import SessionLocal, init_db
+from app.database import init_db, user_session
 from app.tracker.service import TrackerService
 
 logger = logging.getLogger(__name__)
@@ -17,13 +17,13 @@ _maintenance_timeout_tasks: dict[int, asyncio.Task] = {}
 
 
 def _sync_get_maintenance(user_id: int) -> int | None:
-    with SessionLocal() as session:
+    with user_session(user_id) as session:
         svc = TrackerService(session)
         return svc.get_maintenance_calories(user_id)
 
 
 def _sync_set_maintenance(user_id: int, calories: int) -> int:
-    with SessionLocal() as session:
+    with user_session(user_id) as session:
         svc = TrackerService(session)
         return svc.set_maintenance_calories(user_id, calories)
 
@@ -85,7 +85,7 @@ async def _post_init(application: Application) -> None:
 
 
 def _sync_handle(user_id: int, text: str) -> str:
-    with SessionLocal() as session:
+    with user_session(user_id) as session:
         svc = TrackerService(session)
         return svc.handle(user_id, text)
 

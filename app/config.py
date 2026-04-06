@@ -5,6 +5,9 @@ class Settings(BaseSettings):
     telegram_bot_token: str = ""
     openai_api_key: str = ""
     database_url: str = "sqlite:///./data/calories.db"
+    dev_database_url: str = "sqlite:///./data/calories_dev.db"
+    dev_mode: bool = False
+    dev_mode_user_id: int = 0
 
     # Open Food Facts (free, no key) — fallback when local JSON + regex miss
     open_food_facts_enabled: bool = True
