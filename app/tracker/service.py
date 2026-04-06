@@ -5,7 +5,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app import formatter
-from app.models import Day, Entry
+from app.models import Day, Entry, UserProfile
 from app.parser import regex_parser
 from app.parser.base import ParsedEntry
 from app.parser.router import parse_log_line
@@ -222,8 +222,33 @@ class TrackerService:
             .limit(7)
             .all()
         )
+        maintenance = self.get_maintenance_calories(user_id)
         self.session.commit()
-        return formatter.format_weekly_summary(days)
+        return formatter.format_weekly_summary(days, maintenance)
+
+    def get_maintenance_calories(self, user_id: int) -> int | None:
+        profile = (
+            self.session.query(UserProfile)
+            .filter(UserProfile.user_id == user_id)
+            .first()
+        )
+        if not profile:
+            return None
+        return profile.maintenance_calories
+
+    def set_maintenance_calories(self, user_id: int, calories: int) -> int:
+        profile = (
+            self.session.query(UserProfile)
+            .filter(UserProfile.user_id == user_id)
+            .first()
+        )
+        if not profile:
+            profile = UserProfile(user_id=user_id, maintenance_calories=calories)
+            self.session.add(profile)
+        else:
+            profile.maintenance_calories = calories
+        self.session.commit()
+        return calories
 
     def undo(self, user_id: int) -> str:
         """Pop the most recent non-deleted entry from today."""

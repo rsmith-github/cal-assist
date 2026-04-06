@@ -40,3 +40,11 @@ class Entry(Base):
     deleted: Mapped[bool] = mapped_column(Boolean, default=False)
 
     day: Mapped["Day"] = relationship("Day", back_populates="entries")
+
+
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(Integer, nullable=False, unique=True, index=True)
+    maintenance_calories: Mapped[int | None] = mapped_column(Integer, nullable=True)

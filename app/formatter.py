@@ -38,7 +38,7 @@ def format_summary_only(day: Day) -> str:
     return format_totals_block(day)
 
 
-def format_weekly_summary(days: list[Day]) -> str:
+def format_weekly_summary(days: list[Day], maintenance_calories: int | None = None) -> str:
     if not days:
         return "No closed days yet — log some days and use ND to close them for weekly stats."
 
@@ -47,14 +47,6 @@ def format_weekly_summary(days: list[Day]) -> str:
     sum_out = sum(d.total_calories_out for d in days)
     sum_net = sum(d.net_calories for d in days)
     avg_net = sum_net / n
-    # Negative net = deficit ≈ fat loss direction
-    if sum_net <= 0:
-        est_lbs = (-sum_net) / 3500.0
-        fat_line = f"Estimated fat loss (rough): ~{est_lbs:.2f} lb this week (3500 kcal ≈ 1 lb)."
-    else:
-        est_lbs = sum_net / 3500.0
-        fat_line = f"Estimated fat gain (rough): ~{est_lbs:.2f} lb this week."
-
     oldest = min(d.date for d in days)
     newest = max(d.date for d in days)
     lines = [
@@ -63,8 +55,47 @@ def format_weekly_summary(days: list[Day]) -> str:
         f"  Total In:  {sum_in} kcal",
         f"  Total Out: {sum_out} kcal",
         f"  Total Net: {sum_net} kcal",
-        fat_line,
     ]
+    if maintenance_calories is not None and maintenance_calories > 0:
+        target_total = maintenance_calories * n
+        delta = sum_net - target_total
+        if delta < 0:
+            status = (
+                f"Below maintenance by {-delta} kcal total "
+                f"({(-delta / n):.0f} kcal/day average)."
+            )
+            maint_lbs = (-delta) / 3500.0
+            trend = f"Maintenance-based trend: ~{maint_lbs:.2f} lb loss."
+        elif delta > 0:
+            status = (
+                f"Above maintenance by {delta} kcal total "
+                f"({(delta / n):.0f} kcal/day average)."
+            )
+            maint_lbs = delta / 3500.0
+            trend = f"Maintenance-based trend: ~{maint_lbs:.2f} lb gain."
+        else:
+            status = "Exactly at maintenance for this period."
+            trend = "Maintenance-based trend: weight stable."
+        lines.extend(
+            [
+                f"  Maintenance target: {maintenance_calories} kcal/day",
+                f"  {status}",
+                f"  {trend} (3500 kcal ≈ 1 lb)",
+            ]
+        )
+    else:
+        # If maintenance is unknown, net is the best approximation we have.
+        if sum_net <= 0:
+            est_lbs = (-sum_net) / 3500.0
+            fat_line = (
+                f"Estimated fat loss (rough): ~{est_lbs:.2f} lb this week "
+                "(3500 kcal ≈ 1 lb)."
+            )
+        else:
+            est_lbs = sum_net / 3500.0
+            fat_line = f"Estimated fat gain (rough): ~{est_lbs:.2f} lb this week."
+        lines.append("  Maintenance target: not set (use /maintenance).")
+        lines.append(f"  {fat_line}")
     return "\n".join(lines)
 
 
