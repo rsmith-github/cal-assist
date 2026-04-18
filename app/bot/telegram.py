@@ -9,6 +9,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 from app.bot import branding
 from app.config import settings
 from app.database import init_db, user_session
+from app.logging_redaction import install_http_client_log_redaction
 from app.tracker.service import TrackerService
 
 logger = logging.getLogger(__name__)
@@ -213,6 +214,7 @@ def run_bot() -> None:
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
         level=logging.INFO,
     )
+    install_http_client_log_redaction()
     if not settings.telegram_bot_token.strip():
         raise SystemExit("Set TELEGRAM_BOT_TOKEN in .env (see .env.example).")
 
