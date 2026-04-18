@@ -94,8 +94,7 @@ Exercise lines are **not** sent to Open Food Facts (they stay on local estimates
 
 cd ~/path/to/cal-assist
 source .venv/bin/activate
-nohup python -m app.main >> calassist.log 2>&1 &
-echo "PID=$!"
+nohup python -m app.main >> calassist.log 2>&1 & echo "PID=$!"
 sleep 1
 tail -n 50 calassist.log
 
