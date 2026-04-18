@@ -15,6 +15,68 @@ class TrackerService:
     def __init__(self, session: Session) -> None:
         self.session = session
 
+    def _get_open_day(self, user_id: int) -> Day | None:
+        return (
+            self.session.query(Day)
+            .filter(Day.user_id == user_id, Day.closed.is_(False))
+            .order_by(Day.id.desc())
+            .first()
+        )
+
+    def _has_any_entries(self, day: Day) -> bool:
+        return (
+            self.session.query(Entry)
+            .filter(Entry.day_id == day.id, Entry.deleted.is_(False))
+            .first()
+            is not None
+        )
+
+    def _jump_empty_stale_open_day_to_today(self, user_id: int) -> None:
+        """If open day is before today and has no entries, drop it and open today."""
+        open_day = self._get_open_day(user_id)
+        if not open_day or open_day.date >= date.today():
+            return
+        if self._has_any_entries(open_day):
+            return
+        self.session.delete(open_day)
+        self.session.flush()
+        self._attach_open_day_for_calendar_date(user_id, date.today())
+
+    def _attach_open_day_for_calendar_date(self, user_id: int, target: date) -> Day:
+        row = (
+            self.session.query(Day)
+            .filter(Day.user_id == user_id, Day.date == target)
+            .first()
+        )
+        if row:
+            row.closed = False
+            self.session.flush()
+            self._recalc_day(row)
+            return row
+        d = Day(
+            user_id=user_id,
+            date=target,
+            total_calories_in=0,
+            total_calories_out=0,
+            net_calories=0,
+            closed=False,
+        )
+        self.session.add(d)
+        self.session.flush()
+        return d
+
+    def _stale_filled_calendar_block_message(self, user_id: int) -> str | None:
+        """If open day is before today but already has logs, require ND first."""
+        open_day = self._get_open_day(user_id)
+        if not open_day or open_day.date >= date.today():
+            return None
+        if not self._has_any_entries(open_day):
+            return None
+        return (
+            f"Your active logging day is dated {open_day.date}, which is before today. "
+            "Send ND or /nd to close it and start a new day, then log again."
+        )
+
     def _recalc_day(self, day: Day) -> None:
         q = (
             self.session.query(Entry)
@@ -28,13 +90,11 @@ class TrackerService:
         day.net_calories = tin - tout
         self.session.flush()
 
-    def _ensure_open_day(self, user_id: int) -> Day:
-        open_day = (
-            self.session.query(Day)
-            .filter(Day.user_id == user_id, Day.closed.is_(False))
-            .order_by(Day.id.desc())
-            .first()
-        )
+    def _ensure_open_day(self, user_id: int, *, allow_calendar_jump: bool = True) -> Day:
+        if allow_calendar_jump:
+            self._jump_empty_stale_open_day_to_today(user_id)
+
+        open_day = self._get_open_day(user_id)
         if open_day:
             return open_day
 
@@ -73,7 +133,7 @@ class TrackerService:
         self._recalc_day(day)
 
     def new_day(self, user_id: int) -> str:
-        day = self._ensure_open_day(user_id)
+        day = self._ensure_open_day(user_id, allow_calendar_jump=False)
         self._recalc_day(day)
         day.closed = True
         self.session.flush()
@@ -197,8 +257,14 @@ class TrackerService:
         bits = [p.summary_fragment() for p in items]
         return formatter.format_confirmation(bits, day)
 
-    def add_log(self, user_id: int, text: str) -> str:
-        day = self._ensure_open_day(user_id)
+    def add_log(self, user_id: int, text: str, *, skip_calendar_jump: bool = False) -> str:
+        day = self._ensure_open_day(
+            user_id, allow_calendar_jump=not skip_calendar_jump
+        )
+        block = self._stale_filled_calendar_block_message(user_id)
+        if block:
+            self.session.commit()
+            return block
         items = parse_log_line(text)
         if not items:
             self.session.commit()
@@ -280,7 +346,7 @@ class TrackerService:
             if not remainder:
                 return nd_reply
             # Log the remainder onto the newly-opened day
-            log_reply = self.add_log(user_id, remainder)
+            log_reply = self.add_log(user_id, remainder, skip_calendar_jump=True)
             return f"{nd_reply}\n\n{log_reply}"
 
         rm = self._match_remove(raw)

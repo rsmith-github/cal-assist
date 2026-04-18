@@ -88,3 +88,16 @@ Exercise lines are **not** sent to Open Food Facts (they stay on local estimates
 - **Backend**: FastAPI (ready for a future web dashboard)
 - **Database**: SQLite via SQLAlchemy
 - **Parsing**: OpenAI GPT (primary) / regex (fallback)
+
+
+## Deployment commands 
+
+cd ~/path/to/cal-assist
+source .venv/bin/activate
+nohup python -m app.main >> calassist.log 2>&1 &
+echo "PID=$!"
+sleep 1
+tail -n 50 calassist.log
+
+### To kill:
+kill PID that was echoed
