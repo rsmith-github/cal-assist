@@ -68,7 +68,7 @@ Send messages to your Telegram bot like:
 - `remove beers` — deletes the most recent beer entry
 - `actually 2 beers not 3` — replaces the last matching entry with the corrected amount
 - `summary` or `/summary` — today’s totals only
-- `week` or `/week` — up to the last 7 **closed** days (after `ND`), with rough fat change estimate
+- `week` or `/week` — closed days whose calendar date falls in the last 7 days (including today), with a rough kg trend vs maintenance
 
 ## How Parsing Works
 

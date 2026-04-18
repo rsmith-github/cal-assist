@@ -148,9 +148,79 @@ def test_summary_not_blocked_when_filled_stale() -> None:
     print("OK summary with filled stale:", out[:100].replace("\n", " "))
 
 
+def test_nd_on_empty_stale_syncs_without_nd_chain() -> None:
+    s, svc = fresh()
+    uid = 1
+    s.add(
+        Day(
+            user_id=uid,
+            date=YEST,
+            total_calories_in=0,
+            total_calories_out=0,
+            net_calories=0,
+            closed=False,
+        )
+    )
+    s.commit()
+    with patch("app.tracker.service.date") as mock_date:
+        mock_date.today.return_value = TODAY
+        mock_date.side_effect = lambda *a, **kw: date(*a, **kw)
+        out = svc.handle(uid, "ND")
+    assert "skipped" in out.lower() or "gap" in out.lower()
+    open_day = svc._get_open_day(uid)
+    assert open_day.date == TODAY
+    print("OK ND on empty stale -> catch-up:", out.split("\n")[0][:70])
+
+
+def test_weekly_only_counts_closed_days_in_calendar_window() -> None:
+    s, svc = fresh()
+    uid = 1
+    s.add(
+        Day(
+            user_id=uid,
+            date=date(2026, 4, 1),
+            total_calories_in=9999,
+            total_calories_out=0,
+            net_calories=9999,
+            closed=True,
+        )
+    )
+    s.add(
+        Day(
+            user_id=uid,
+            date=date(2026, 4, 17),
+            total_calories_in=100,
+            total_calories_out=0,
+            net_calories=100,
+            closed=True,
+        )
+    )
+    s.add(
+        Day(
+            user_id=uid,
+            date=date(2026, 4, 18),
+            total_calories_in=200,
+            total_calories_out=0,
+            net_calories=200,
+            closed=True,
+        )
+    )
+    s.commit()
+    with patch("app.tracker.service.date") as mock_date:
+        mock_date.today.return_value = TODAY
+        mock_date.side_effect = lambda *a, **kw: date(*a, **kw)
+        out = svc.weekly(uid)
+    assert "9999" not in out
+    assert "300" in out
+    assert "2026-04-13" in out and "2026-04-19" in out
+    print("OK weekly 7-day window:", out.split("\n")[0])
+
+
 if __name__ == "__main__":
     test_empty_stale_jumps_to_today()
     test_filled_stale_blocks()
     test_nd_then_log_remainder()
     test_summary_not_blocked_when_filled_stale()
+    test_nd_on_empty_stale_syncs_without_nd_chain()
+    test_weekly_only_counts_closed_days_in_calendar_window()
     print("All smoke checks passed.")

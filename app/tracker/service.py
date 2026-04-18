@@ -132,8 +132,26 @@ class TrackerService:
         self.session.flush()
         self._recalc_day(day)
 
-    def new_day(self, user_id: int) -> str:
+    def new_day(self, user_id: int, *, for_remainder_followup: bool = False) -> str:
+        """Roll forward the calendar day. If the open day is empty and behind
+        server today, sync to today first (avoids closing one ND at a time
+        across a gap). Skipped when `for_remainder_followup` so ND, food keeps
+        the post-ND day as the +1 calendar day.
+        """
         day = self._ensure_open_day(user_id, allow_calendar_jump=False)
+        if (
+            not for_remainder_followup
+            and not self._has_any_entries(day)
+            and day.date < date.today()
+        ):
+            before = day.date
+            self._jump_empty_stale_open_day_to_today(user_id)
+            self.session.flush()
+            day = self._get_open_day(user_id)
+            if day is not None and day.date != before:
+                self.session.commit()
+                return formatter.format_stale_empty_caught_up(day)
+
         self._recalc_day(day)
         day.closed = True
         self.session.flush()
@@ -281,16 +299,24 @@ class TrackerService:
         return formatter.format_summary_only(day)
 
     def weekly(self, user_id: int) -> str:
+        today = date.today()
+        window_start = today - timedelta(days=6)
         days = (
             self.session.query(Day)
-            .filter(Day.user_id == user_id, Day.closed.is_(True))
+            .filter(
+                Day.user_id == user_id,
+                Day.closed.is_(True),
+                Day.date >= window_start,
+                Day.date <= today,
+            )
             .order_by(Day.date.desc())
-            .limit(7)
             .all()
         )
         maintenance = self.get_maintenance_calories(user_id)
         self.session.commit()
-        return formatter.format_weekly_summary(days, maintenance)
+        return formatter.format_weekly_summary(
+            days, maintenance, period_start=window_start, period_end=today
+        )
 
     def get_maintenance_calories(self, user_id: int) -> int | None:
         profile = (
@@ -342,7 +368,9 @@ class TrackerService:
 
         is_nd, remainder = self._match_nd(raw)
         if is_nd:
-            nd_reply = self.new_day(user_id)
+            nd_reply = self.new_day(
+                user_id, for_remainder_followup=bool(remainder)
+            )
             if not remainder:
                 return nd_reply
             # Log the remainder onto the newly-opened day

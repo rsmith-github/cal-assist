@@ -1,6 +1,7 @@
+from datetime import date
+
 from app.models import Day
 
-KCAL_PER_LB = 3500.0
 KCAL_PER_KG = 7700.0
 
 
@@ -41,8 +42,34 @@ def format_summary_only(day: Day) -> str:
     return format_totals_block(day)
 
 
-def format_weekly_summary(days: list[Day], maintenance_calories: int | None = None) -> str:
+def format_stale_empty_caught_up(day: Day) -> str:
+    head = (
+        "Empty backdated day(s) were skipped — your active logging day is now "
+        f"{day.date} (no need to ND through each gap day).\n\n"
+    )
+    return head + format_totals_block(day)
+
+
+def format_weekly_summary(
+    days: list[Day],
+    maintenance_calories: int | None = None,
+    *,
+    period_start: date | None = None,
+    period_end: date | None = None,
+) -> str:
+    if period_start is not None and period_end is not None:
+        period = f"{period_start} – {period_end}"
+    elif days:
+        period = f"{min(d.date for d in days)} – {max(d.date for d in days)}"
+    else:
+        period = ""
+
     if not days:
+        if period:
+            return (
+                f"No closed days in this window ({period}). "
+                "Log and ND days in that range to see a week summary."
+            )
         return "No closed days yet — log some days and use ND to close them for weekly stats."
 
     n = len(days)
@@ -50,62 +77,40 @@ def format_weekly_summary(days: list[Day], maintenance_calories: int | None = No
     sum_out = sum(d.total_calories_out for d in days)
     sum_net = sum(d.net_calories for d in days)
     avg_net = sum_net / n
-    oldest = min(d.date for d in days)
-    newest = max(d.date for d in days)
     lines = [
-        f"Week summary ({n} closed day(s), {oldest} → {newest}):",
-        f"  Avg net: {avg_net:.0f} kcal/day",
-        f"  Total In:  {sum_in} kcal",
-        f"  Total Out: {sum_out} kcal",
-        f"  Total Net: {sum_net} kcal",
+        f"Week ({period}) — {n} closed day(s)",
+        f"Avg net: {avg_net:.0f} kcal/day",
+        f"Total in:  {sum_in} kcal",
+        f"Total out: {sum_out} kcal",
+        f"Total net: {sum_net} kcal",
     ]
     if maintenance_calories is not None and maintenance_calories > 0:
         target_total = maintenance_calories * n
         delta = sum_net - target_total
+        lines.append(f"Maintenance: {maintenance_calories} kcal/day")
         if delta < 0:
-            status = (
-                f"Below maintenance by {-delta} kcal total "
-                f"({(-delta / n):.0f} kcal/day average)."
-            )
-            maint_lbs = (-delta) / KCAL_PER_LB
-            maint_kg = (-delta) / KCAL_PER_KG
-            trend = f"Maintenance-based trend: ~{maint_lbs:.2f} lb / {maint_kg:.2f} kg loss."
+            kg = (-delta) / KCAL_PER_KG
+            lines.append(f"Vs maintenance: ~{kg:.2f} kg loss (rough, {KCAL_PER_KG:.0f} kcal ≈ 1 kg)")
         elif delta > 0:
-            status = (
-                f"Above maintenance by {delta} kcal total "
-                f"({(delta / n):.0f} kcal/day average)."
-            )
-            maint_lbs = delta / KCAL_PER_LB
-            maint_kg = delta / KCAL_PER_KG
-            trend = f"Maintenance-based trend: ~{maint_lbs:.2f} lb / {maint_kg:.2f} kg gain."
+            kg = delta / KCAL_PER_KG
+            lines.append(f"Vs maintenance: ~{kg:.2f} kg gain (rough, {KCAL_PER_KG:.0f} kcal ≈ 1 kg)")
         else:
-            status = "Exactly at maintenance for this period."
-            trend = "Maintenance-based trend: weight stable."
-        lines.extend(
-            [
-                f"  Maintenance target: {maintenance_calories} kcal/day",
-                f"  {status}",
-                f"  {trend} ({KCAL_PER_LB:.0f} kcal ≈ 1 lb, {KCAL_PER_KG:.0f} kcal ≈ 1 kg)",
-            ]
-        )
+            lines.append("Vs maintenance: on target for this window.")
     else:
-        # If maintenance is unknown, net is the best approximation we have.
         if sum_net <= 0:
-            est_lbs = (-sum_net) / KCAL_PER_LB
             est_kg = (-sum_net) / KCAL_PER_KG
             fat_line = (
-                f"Estimated fat loss (rough): ~{est_lbs:.2f} lb / {est_kg:.2f} kg this week "
-                f"({KCAL_PER_LB:.0f} kcal ≈ 1 lb, {KCAL_PER_KG:.0f} kcal ≈ 1 kg)."
+                f"Rough net-kcal trend: ~{est_kg:.2f} kg loss "
+                f"(set /maintenance for a better estimate; {KCAL_PER_KG:.0f} kcal ≈ 1 kg)."
             )
         else:
-            est_lbs = sum_net / KCAL_PER_LB
             est_kg = sum_net / KCAL_PER_KG
             fat_line = (
-                f"Estimated fat gain (rough): ~{est_lbs:.2f} lb / {est_kg:.2f} kg this week "
-                f"({KCAL_PER_LB:.0f} kcal ≈ 1 lb, {KCAL_PER_KG:.0f} kcal ≈ 1 kg)."
+                f"Rough net-kcal trend: ~{est_kg:.2f} kg gain "
+                f"(set /maintenance for a better estimate; {KCAL_PER_KG:.0f} kcal ≈ 1 kg)."
             )
-        lines.append("  Maintenance target: not set (use /maintenance).")
-        lines.append(f"  {fat_line}")
+        lines.append("Maintenance: not set (use /maintenance).")
+        lines.append(fat_line)
     return "\n".join(lines)
 
 
